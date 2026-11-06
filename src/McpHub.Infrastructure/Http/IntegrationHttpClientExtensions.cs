@@ -16,7 +16,14 @@ public static class IntegrationHttpClientExtensions
         where TImplementation : class, TClient
     {
         var builder = services.AddHttpClient<TClient, TImplementation>(configure);
-        builder.AddStandardResilienceHandler();
+        // Retrying a POST/PUT/PATCH/DELETE could create duplicates or repeat a delete, so only GET/HEAD/OPTIONS are retried (on 5xx, 408 and 429).
+        builder.AddStandardResilienceHandler(o =>
+        {
+            o.Retry.ShouldHandle = args => ValueTask.FromResult(
+                args.Outcome.Result is { RequestMessage.Method: var method } response
+                && (method == HttpMethod.Get || method == HttpMethod.Head || method == HttpMethod.Options)
+                && ((int)response.StatusCode >= 500 || (int)response.StatusCode is 408 or 429));
+        });
         return builder;
     }
 }

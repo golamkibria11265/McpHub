@@ -38,8 +38,14 @@ public sealed class PostmanModule : IIntegrationModule
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("McpHub/1.0");
             })
             .AddHttpMessageHandler<PostmanAuthHandler>()
-            // Retrying a POST/PUT/DELETE could create duplicates or repeat a delete, so only safe methods are retried.
-            .AddStandardResilienceHandler(o => o.Retry.DisableForUnsafeHttpMethods());
+            // Retrying a POST/PUT/DELETE could create duplicates or repeat a delete, so only GET/HEAD/OPTIONS are retried (on 5xx, 408 and 429).
+            .AddStandardResilienceHandler(o =>
+            {
+                o.Retry.ShouldHandle = args => ValueTask.FromResult(
+                    args.Outcome.Result is { RequestMessage.Method: var method } response
+                    && (method == HttpMethod.Get || method == HttpMethod.Head || method == HttpMethod.Options)
+                    && ((int)response.StatusCode >= 500 || (int)response.StatusCode is 408 or 429));
+            });
 
         services.AddTransient<PostmanService>();
     }

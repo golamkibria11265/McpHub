@@ -8,6 +8,12 @@ public sealed class SqlConnectionOptions
 {
     /// <summary>Shown to the model so it can pick the right database.</summary>
     public string? Description { get; set; }
+
+    /// <summary>Allows INSERT and UPDATE through this connection. Off by default; the database login must also have the rights.</summary>
+    public bool AllowWrite { get; set; }
+
+    /// <summary>Allows DELETE through this connection. Only effective together with <see cref="AllowWrite"/>.</summary>
+    public bool AllowDelete { get; set; }
 }
 
 /// <summary>Bound from <c>Modules:Sql</c>.</summary>
@@ -23,6 +29,9 @@ public sealed class SqlOptions
 
     /// <summary>Longest single text value returned; longer values are truncated.</summary>
     public int MaxCellChars { get; set; } = 2_000;
+
+    /// <summary>A write that would change more rows than this is rolled back and refused.</summary>
+    public int MaxAffectedRows { get; set; } = 100;
 
     /// <summary>
     /// Extra column names that are never returned or queried, on top of the built-in list

@@ -15,7 +15,7 @@ namespace McpHub.Modules.Mongo;
 /// Only Find is ever issued (no aggregation pipelines, no writes), so there is nothing to switch to read-only.
 /// Registered as a singleton because <see cref="MongoClient"/> is designed to be shared.
 /// </summary>
-public sealed class MongoService
+public sealed partial class MongoService
 {
     private const string Integration = MongoModule.IntegrationName;
     private const int SampleSize = 20;

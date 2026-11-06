@@ -20,7 +20,7 @@ public static partial class SqlGuard
     private const int MaxLength = 10_000;
 
     [GeneratedRegex("[A-Za-z_][A-Za-z0-9_]*")]
-    private static partial Regex WordPattern();
+    internal static partial Regex WordPattern();
 
     [GeneratedRegex(@"\bNEXT\s+VALUE\s+FOR\b|\bWITH\s*\(\s*[^)]*\b(UPDLOCK|XLOCK|HOLDLOCK|TABLOCKX|PAGLOCK)\b", RegexOptions.IgnoreCase)]
     private static partial Regex LockingPattern();
@@ -86,7 +86,7 @@ public static partial class SqlGuard
     /// Backslash is intentionally NOT treated as an escape: engines disagree about it, and the strict reading can
     /// only produce a false rejection, never a hidden statement.
     /// </summary>
-    private static (string Code, List<string> Quoted, bool TrailingSemicolon) Mask(string text)
+    internal static (string Code, List<string> Quoted, bool TrailingSemicolon) Mask(string text)
     {
         var code = new StringBuilder(text.Length);
         var quoted = new List<string>();
@@ -166,6 +166,6 @@ public static partial class SqlGuard
         throw Invalid("The query has an unterminated quote.");
     }
 
-    private static IntegrationException Invalid(string message) =>
+    internal static IntegrationException Invalid(string message) =>
         new(IntegrationErrorKind.InvalidInput, SqlModule.IntegrationName, message);
 }

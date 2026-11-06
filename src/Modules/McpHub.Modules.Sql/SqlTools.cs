@@ -42,4 +42,24 @@ public sealed class SqlTools(SqlDatabase database, IToolExecutor executor)
         CancellationToken cancellationToken = default) =>
         executor.ExecuteAsync("sql_query", SqlScopes.Read,
             () => database.QueryAsync(connection, sql, maxRows, cancellationToken));
+
+    [McpServerTool(Name = "sql_execute", Destructive = true, Idempotent = false)]
+    [Description("Runs ONE INSERT or UPDATE on a SQL Server database (UPDATE needs a WHERE clause). No schema changes, no comments, no multiple statements, no restricted columns. Without confirm=true it only previews: it reports how many rows would change and changes nothing. Ask the user before sending confirm=true. Requires writes to be enabled for the connection.")]
+    public Task<WriteResult> Execute(
+        [Description("Connection name from sql_list_connections.")] string connection,
+        [Description("A single INSERT or UPDATE statement in SQL Server syntax.")] string sql,
+        [Description("False (default) previews and rolls back. True commits the change.")] bool confirm = false,
+        CancellationToken cancellationToken = default) =>
+        executor.ExecuteAsync("sql_execute", SqlScopes.Write,
+            () => database.ExecuteAsync(connection, sql, confirm, SqlStatementKind.InsertOrUpdate, cancellationToken));
+
+    [McpServerTool(Name = "sql_delete", Destructive = true, Idempotent = false)]
+    [Description("Runs ONE DELETE with a WHERE clause on a SQL Server database. Without confirm=true it only previews the row count and deletes nothing. Always ask the user before sending confirm=true. Requires deletes to be enabled for the connection.")]
+    public Task<WriteResult> Delete(
+        [Description("Connection name from sql_list_connections.")] string connection,
+        [Description("A single DELETE statement with a WHERE clause.")] string sql,
+        [Description("False (default) previews and rolls back. True commits the delete.")] bool confirm = false,
+        CancellationToken cancellationToken = default) =>
+        executor.ExecuteAsync("sql_delete", SqlScopes.Delete,
+            () => database.ExecuteAsync(connection, sql, confirm, SqlStatementKind.Delete, cancellationToken));
 }

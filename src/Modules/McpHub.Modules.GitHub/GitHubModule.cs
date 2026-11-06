@@ -24,6 +24,7 @@ public sealed class GitHubModule : IIntegrationModule
                 "Modules:GitHub:AllowedOwners must contain exactly one GitHub user or organization name. The tools always work on that owner.")
             .Validate(o => Uri.TryCreate(o.BaseUrl, UriKind.Absolute, out _),
                 "Modules:GitHub:BaseUrl must be an absolute URL.")
+            .Validate(o => o.MaxWriteChars > 0, "Modules:GitHub:MaxWriteChars must be positive.")
             .ValidateOnStart();
 
         services.AddSingleton<RepositoryAccessPolicy>();
@@ -41,10 +42,14 @@ public sealed class GitHubModule : IIntegrationModule
             })
             .AddHttpMessageHandler<GitHubAuthHandler>();
 
+        // The same typed client also serves writes; retries for POST/PUT/PATCH/DELETE are switched off in AddIntegrationHttpClient.
+        services.AddTransient<IGitHubWriteClient>(sp => (IGitHubWriteClient)sp.GetRequiredService<IGitHubApiClient>());
+
         services.AddTransient<RepositoryService>();
         services.AddTransient<IssueService>();
         services.AddTransient<PullRequestService>();
         services.AddTransient<CommitService>();
         services.AddTransient<WorkflowService>();
+        services.AddTransient<GitHubWriteService>();
     }
 }

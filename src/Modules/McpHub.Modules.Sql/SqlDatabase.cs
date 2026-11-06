@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 namespace McpHub.Modules.Sql;
 
 /// <summary>Use cases for SQL Server: list tables, describe a table, run a read-only query.</summary>
-public sealed class SqlDatabase
+public sealed partial class SqlDatabase
 {
     private const string Integration = SqlModule.IntegrationName;
 
@@ -143,7 +143,7 @@ public sealed class SqlDatabase
         }
     }
 
-    private async Task<DbConnection> OpenAsync(ResolvedConnection target, CancellationToken cancellationToken)
+    private async Task<DbConnection> OpenAsync(ResolvedConnection target, CancellationToken cancellationToken, bool writable = false)
     {
         DbConnection connection;
         try
@@ -160,7 +160,11 @@ public sealed class SqlDatabase
         try
         {
             await connection.OpenAsync(cancellationToken);
-            await PrepareReadOnlySessionAsync(connection, cancellationToken);
+            if (!writable)
+            {
+                await PrepareReadOnlySessionAsync(connection, cancellationToken);
+            }
+
             return connection;
         }
         catch (DbException ex) when (!cancellationToken.IsCancellationRequested)

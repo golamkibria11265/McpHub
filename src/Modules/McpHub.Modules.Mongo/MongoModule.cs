@@ -30,6 +30,8 @@ public sealed partial class MongoModule : IIntegrationModule
                 "Every connection needs Modules:Mongo:Credentials:Connections:{name}:ConnectionString.")
             .Validate(o => o.MaxRows is >= 1 and <= 5_000 && o.CommandTimeoutSeconds is >= 1 and <= 120 && o.MaxDocumentChars >= 200,
                 "Modules:Mongo limits are out of range (MaxRows 1-5000, CommandTimeoutSeconds 1-120, MaxDocumentChars >= 200).")
+            .Validate(o => o.MaxAffectedRows is >= 1 and <= 10_000,
+                "Modules:Mongo:MaxAffectedRows must be between 1 and 10000.")
             .ValidateOnStart();
 
         // Singleton: the MongoDB client is designed to be created once and shared.

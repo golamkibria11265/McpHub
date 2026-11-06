@@ -2,7 +2,7 @@
 
 A production-oriented [Model Context Protocol](https://modelcontextprotocol.io) server in .NET 10 that lets Claude use
 your systems through small, audited, read-only-by-default tools. One host, one plugin-style module per integration.
-Today: **GitHub (read-only)**. Planned: SQL Server, Jira, LinkedIn, Facebook.
+Today: **GitHub, SQL Server, PostgreSQL, MongoDB and Postman (read, plus switch-gated writes)**. Planned: SQL Server, Jira, LinkedIn, Facebook.
 
 > Status: first scaffold. It was written without access to a .NET SDK or NuGet, so **run the first build yourself**
 > (see "First run") and fix anything the compiler reports before deploying.
@@ -39,7 +39,7 @@ failures into safe messages.
 - **Allow-list:** `Modules:GitHub:AllowedOwners` is mandatory; the server never touches other owners even if the token could.
 - **Input validation:** owners, repos, branches and paths are allow-listed by shape; search queries cannot add
   `repo:`/`org:`/`user:` qualifiers; files that usually hold secrets (`.env`, keys, state files) are blocked.
-- **Prompt injection:** issue and PR text is untrusted. Tool descriptions say so and no write tools exist yet.
+- **Prompt injection:** issue and PR text is untrusted. Tool descriptions say so and write tools are off by default: each module needs its `AllowWrite` (and `AllowDelete`) switch plus the `<module>.write` / `<module>.delete` scope. SQL and Mongo writes preview first (`confirm=true` applies), and GitHub refuses commits to protected branches.
 - **Audit:** one structured log line per call (user, tool, outcome, duration). Arguments and results are never logged.
 - **Modules are opt-in:** nothing is exposed unless `Modules:<Name>:Enabled=true`.
 

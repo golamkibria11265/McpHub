@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 namespace McpHub.Modules.Postgres;
 
 /// <summary>Use cases for PostgreSQL: list tables, describe a table, run a read-only query.</summary>
-public sealed class PostgresDatabase
+public sealed partial class PostgresDatabase
 {
     private const string Integration = PostgresModule.IntegrationName;
 
@@ -143,7 +143,7 @@ public sealed class PostgresDatabase
         }
     }
 
-    private async Task<DbConnection> OpenAsync(ResolvedConnection target, CancellationToken cancellationToken)
+    private async Task<DbConnection> OpenAsync(ResolvedConnection target, CancellationToken cancellationToken, bool writable = false)
     {
         DbConnection connection;
         try
@@ -160,7 +160,11 @@ public sealed class PostgresDatabase
         try
         {
             await connection.OpenAsync(cancellationToken);
-            await PrepareReadOnlySessionAsync(connection, cancellationToken);
+            if (!writable)
+            {
+                await PrepareReadOnlySessionAsync(connection, cancellationToken);
+            }
+
             return connection;
         }
         catch (DbException ex) when (!cancellationToken.IsCancellationRequested)

@@ -16,5 +16,26 @@ public sealed class GitHubOptions
     /// <summary>Longest file content returned to the model; longer files are truncated and flagged.</summary>
     public int MaxFileChars { get; set; } = 50_000;
 
+    /// <summary>Master switch for create/update tools (issues, comments, branches, file commits, pull requests). Off by default.</summary>
+    public bool AllowWrite { get; set; }
+
+    /// <summary>Extra switch for deleting files and branches. Only effective together with <see cref="AllowWrite"/>.</summary>
+    public bool AllowDelete { get; set; }
+
+    /// <summary>Extra switch for merging pull requests. Only effective together with <see cref="AllowWrite"/>.</summary>
+    public bool AllowMerge { get; set; }
+
+    /// <summary>
+    /// When false (default) commits and branch deletions are refused on the default branch and on <see cref="ProtectedBranches"/>,
+    /// so changes go through a branch and a pull request.
+    /// </summary>
+    public bool AllowCommitToProtectedBranches { get; set; }
+
+    /// <summary>Branches treated as protected in addition to the repository's default branch.</summary>
+    public string[] ProtectedBranches { get; set; } = ["main", "master", "release", "production"];
+
+    /// <summary>Largest file content (characters) accepted in one commit.</summary>
+    public int MaxWriteChars { get; set; } = 200_000;
+
     public int ClampCount(int? requested) => Math.Clamp(requested ?? MaxResults, 1, MaxResults);
 }

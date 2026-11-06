@@ -18,3 +18,6 @@ public sealed record QueryResult(
     int RowCount,
     bool Truncated,
     IReadOnlyList<string> RedactedColumns);
+
+/// <summary>Outcome of a write. <see cref="Committed"/> is false for a preview, where nothing was changed.</summary>
+public sealed record WriteResult(string Connection, string Operation, int RowsAffected, bool Committed, string Message);
