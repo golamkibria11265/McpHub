@@ -12,3 +12,4 @@ appsettings.Production.json
 appsettings.*.local.json
 secrets.json
 TestResults/
+/src/McpHub.Host/appsettings.Production.json
