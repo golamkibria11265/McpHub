@@ -5,8 +5,8 @@ public sealed class GitHubOptions
     public string BaseUrl { get; set; } = "https://api.github.com/";
 
     /// <summary>
-    /// GitHub users/organizations the tools may touch. Required (startup fails when empty): the server never
-    /// reaches beyond this list even if the token itself has wider access.
+    /// The single GitHub user or organization the tools work on. Required (startup fails unless exactly one name is
+    /// given). The caller never supplies an owner: the server never reaches beyond this one even if the token could.
     /// </summary>
     public string[] AllowedOwners { get; set; } = [];
 

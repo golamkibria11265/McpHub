@@ -9,6 +9,18 @@ namespace McpHub.Modules.GitHub.Access;
 /// </summary>
 public sealed class RepositoryAccessPolicy(IOptions<GitHubOptions> options)
 {
+    /// <summary>
+    /// The owner every tool works on. It comes only from configuration (<c>Modules:GitHub:AllowedOwners</c>),
+    /// never from the caller, so the model cannot pick or probe other accounts.
+    /// </summary>
+    public string ConfiguredOwner =>
+        options.Value.AllowedOwners is [var only]
+            ? only
+            : throw new IntegrationException(
+                IntegrationErrorKind.Unavailable,
+                GitHubModule.IntegrationName,
+                "The GitHub owner is not configured correctly. Contact the administrator.");
+
     public string ResolveOwner(string? owner)
     {
         var valid = GitHubInput.RequireName(owner, "owner");

@@ -20,8 +20,8 @@ public sealed class GitHubModule : IIntegrationModule
     {
         services.AddOptions<GitHubOptions>()
             .Bind(configuration.GetSection($"Modules:{Name}"))
-            .Validate(o => o.AllowedOwners.Length > 0,
-                "Modules:GitHub:AllowedOwners must list at least one GitHub user or organization.")
+            .Validate(o => o.AllowedOwners is [{ Length: > 0 }],
+                "Modules:GitHub:AllowedOwners must contain exactly one GitHub user or organization name. The tools always work on that owner.")
             .Validate(o => Uri.TryCreate(o.BaseUrl, UriKind.Absolute, out _),
                 "Modules:GitHub:BaseUrl must be an absolute URL.")
             .ValidateOnStart();
