@@ -1,0 +1,14 @@
+bin/
+obj/
+publish/
+.vs/
+.idea/
+*.user
+*.env
+!*.env.example
+# These hold credentials: never commit them. Commit the *.example.json templates instead.
+appsettings.Development.json
+appsettings.Production.json
+appsettings.*.local.json
+secrets.json
+TestResults/

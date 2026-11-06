@@ -1,0 +1,52 @@
+# /etc/systemd/system/mcphub.service
+# Runs McpHub as an unprivileged, sandboxed service. Kestrel listens on loopback only; Nginx terminates TLS.
+
+[Unit]
+Description=McpHub MCP server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=mcphub
+Group=mcphub
+WorkingDirectory=/opt/mcphub
+ExecStart=/usr/bin/dotnet /opt/mcphub/McpHub.Host.dll
+
+# Production => the host loads /opt/mcphub/appsettings.json, then appsettings.Production.json.
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_CLI_TELEMETRY_OPTOUT=1
+# Optional per-server overrides (leading '-' means the file may be absent).
+EnvironmentFile=-/etc/mcphub/mcphub.env
+
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=true
+MemoryDenyWriteExecute=false
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+UMask=0077
+
+# Resource limits
+MemoryMax=1G
+TasksMax=512
+
+[Install]
+WantedBy=multi-user.target

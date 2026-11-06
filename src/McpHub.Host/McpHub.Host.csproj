@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <AssemblyName>McpHub.Host</AssemblyName>
+    <RootNamespace>McpHub.Host</RootNamespace>
+    <UserSecretsId>mcphub-host-dev</UserSecretsId>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Never ship the developer's settings (they hold a developer token) or the templates. -->
+    <Content Update="appsettings.Development.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.*.example.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\McpHub.Core\McpHub.Core.csproj" />
+    <ProjectReference Include="..\McpHub.Infrastructure\McpHub.Infrastructure.csproj" />
+    <!-- Every integration module is picked up automatically: add a project under src/Modules and it ships. -->
+    <ProjectReference Include="..\Modules\**\*.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="McpHub.UnitTests" />
+  </ItemGroup>
+
+</Project>
