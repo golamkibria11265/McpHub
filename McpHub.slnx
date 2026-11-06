@@ -9,6 +9,7 @@
     <Project Path="src/Modules/McpHub.Modules.Sql/McpHub.Modules.Sql.csproj" />
     <Project Path="src/Modules/McpHub.Modules.Postgres/McpHub.Modules.Postgres.csproj" />
     <Project Path="src/Modules/McpHub.Modules.Mongo/McpHub.Modules.Mongo.csproj" />
+    <Project Path="src/Modules/McpHub.Modules.Postman/McpHub.Modules.Postman.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/McpHub.UnitTests/McpHub.UnitTests.csproj" />
