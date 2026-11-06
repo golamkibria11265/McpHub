@@ -4,7 +4,8 @@
     <AssemblyName>McpHub.Host</AssemblyName>
     <RootNamespace>McpHub.Host</RootNamespace>
     <UserSecretsId>mcphub-host-dev</UserSecretsId>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- Microsoft.Data.SqlClient (Sql module) does not work in invariant mode. On Linux servers install the ICU library (libicu). -->
+    <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
