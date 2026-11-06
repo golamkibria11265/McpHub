@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
   </PropertyGroup>
 
@@ -16,6 +17,15 @@
 
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
+
+    <!-- Database modules (Sql, Postgres, Mongo). Pinned versions: check for vulnerable packages (dotnet list package, vulnerable option) and bump when advisories appear. -->
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <PackageVersion Include="Npgsql" Version="9.0.3" />
+    <PackageVersion Include="MongoDB.Driver" Version="3.13.0" />
+
+    <!-- Security pins for transitive dependencies (known vulnerabilities in the versions the drivers resolve by default).
+         Pkcs: pulled in by SqlClient, fixed in 9.0.21. Remove when SqlClient depends on a fixed version itself. -->
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.21" />
 
     <!-- Tests -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />

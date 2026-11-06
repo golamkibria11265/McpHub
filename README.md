@@ -59,7 +59,7 @@ failures into safe messages.
 cd McpHub
 dotnet restore                 # creates packages.lock.json files; commit them
 dotnet test
-# edit src/McpHub.Host/appsettings.Development.json: set Credentials:GitHub:Token and Modules:GitHub:AllowedOwners
+# edit src/McpHub.Host/appsettings.Development.json: set Modules:GitHub:Credentials:Token and Modules:GitHub:AllowedOwners
 # (this file is git-ignored; appsettings.Development.example.json is the committed template)
 dotnet run --project src/McpHub.Host
 ```
@@ -106,7 +106,7 @@ Deploying a new version: publish, rsync, `sudo systemctl restart mcphub` (statel
 2. Implement `IIntegrationModule`: register options, an HTTP client via `AddIntegrationHttpClient`, and your services.
 3. Write a service per use case, a client per external system, and tool classes marked `[McpServerToolType]` that only call
    `IToolExecutor.ExecuteAsync(toolName, scope, ...)`.
-4. Add `Modules:<Name>` to configuration (`Enabled: false` by default) and its credential as `Credentials:<Name>:Token`.
+4. Add `Modules:<Name>` to configuration (`Enabled: false` by default) and its credential as `Modules:<Name>:Credentials:Token` (inside the module's own section).
 5. Add unit tests with a fake client. **No change to the host is needed**; the project reference glob and module loader pick it up.
 
 Different auth style (OAuth refresh tokens for LinkedIn/Facebook, a connection string for SQL Server)? Implement or extend

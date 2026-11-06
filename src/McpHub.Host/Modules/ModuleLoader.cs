@@ -12,6 +12,7 @@ internal static class ModuleLoader
     public static IReadOnlyList<IIntegrationModule> Discover(string? directory = null)
     {
         var modules = new List<IIntegrationModule>();
+        var origin = new Dictionary<IIntegrationModule, string>();
 
         foreach (var path in Directory.EnumerateFiles(directory ?? AppContext.BaseDirectory, AssemblyPattern))
         {
@@ -19,7 +20,9 @@ internal static class ModuleLoader
 
             foreach (var type in GetModuleTypes(assembly))
             {
-                modules.Add((IIntegrationModule)Activator.CreateInstance(type)!);
+                var module = (IIntegrationModule)Activator.CreateInstance(type)!;
+                modules.Add(module);
+                origin[module] = Path.GetFileName(path);
             }
         }
 
@@ -29,7 +32,7 @@ internal static class ModuleLoader
 
         if (duplicate is not null)
         {
-            throw new InvalidOperationException($"Two integration modules declare the name '{duplicate.Key}'.");
+            throw new InvalidOperationException($"Two integration modules declare the name '{duplicate.Key}' (in {string.Join(" and ", duplicate.Select(m => origin[m]))}). Delete the stale DLL from the output folder.");
         }
 
         return modules;

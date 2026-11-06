@@ -16,6 +16,9 @@
     <ProjectReference Include="..\..\src\McpHub.Core\McpHub.Core.csproj" />
     <ProjectReference Include="..\..\src\McpHub.Host\McpHub.Host.csproj" />
     <ProjectReference Include="..\..\src\Modules\McpHub.Modules.GitHub\McpHub.Modules.GitHub.csproj" />
+    <ProjectReference Include="..\..\src\Modules\McpHub.Modules.Sql\McpHub.Modules.Sql.csproj" />
+    <ProjectReference Include="..\..\src\Modules\McpHub.Modules.Postgres\McpHub.Modules.Postgres.csproj" />
+    <ProjectReference Include="..\..\src\Modules\McpHub.Modules.Mongo\McpHub.Modules.Mongo.csproj" />
   </ItemGroup>
 
   <ItemGroup>

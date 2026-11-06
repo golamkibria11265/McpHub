@@ -1,0 +1,26 @@
+  Determining projects to restore...
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Postgres\McpHub.Modules.Database.Postgres.csproj (in 279 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Mongo\McpHub.Modules.Database.Mongo.csproj (in 279 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Common\McpHub.Modules.Database.Common.csproj (in 279 ms).
+D:\.net\ms\DotNet\MCP\McpHub\tests\McpHub.UnitTests\McpHub.UnitTests.csproj : warning NU1902: Package 'SharpCompress' 0.30.1 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-6c8g-7p36-r338 [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Sql\McpHub.Modules.Sql.csproj : warning NU1902: Package 'System.Security.Cryptography.Pkcs' 9.0.4 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Sql\McpHub.Modules.Sql.csproj : warning NU1903: Package 'System.Security.Cryptography.Pkcs' 9.0.4 has a known high severity vulnerability, https://github.com/advisories/GHSA-846f-f764-76mx [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\tests\McpHub.UnitTests\McpHub.UnitTests.csproj : warning NU1903: Package 'Snappier' 1.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-pggp-6c3x-2xmx [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\tests\McpHub.UnitTests\McpHub.UnitTests.csproj : warning NU1902: Package 'System.Security.Cryptography.Pkcs' 9.0.4 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\tests\McpHub.UnitTests\McpHub.UnitTests.csproj : warning NU1903: Package 'System.Security.Cryptography.Pkcs' 9.0.4 has a known high severity vulnerability, https://github.com/advisories/GHSA-846f-f764-76mx [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Mongo\McpHub.Modules.Mongo.csproj : warning NU1902: Package 'SharpCompress' 0.30.1 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-6c8g-7p36-r338 [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Mongo\McpHub.Modules.Mongo.csproj : warning NU1903: Package 'Snappier' 1.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-pggp-6c3x-2xmx [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Mongo\McpHub.Modules.Mongo.csproj (in 377 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Infrastructure\McpHub.Infrastructure.csproj (in 66 ms).
+D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Host\McpHub.Host.csproj : warning NU1902: Package 'SharpCompress' 0.30.1 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-6c8g-7p36-r338 [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Host\McpHub.Host.csproj : warning NU1903: Package 'Snappier' 1.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-pggp-6c3x-2xmx [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Host\McpHub.Host.csproj : warning NU1902: Package 'System.Security.Cryptography.Pkcs' 9.0.4 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Host\McpHub.Host.csproj : warning NU1903: Package 'System.Security.Cryptography.Pkcs' 9.0.4 has a known high severity vulnerability, https://github.com/advisories/GHSA-846f-f764-76mx [D:\.net\ms\DotNet\MCP\McpHub\McpHub.slnx]
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Postgres\McpHub.Modules.Postgres.csproj (in 439 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Core\McpHub.Core.csproj (in 97 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\tests\McpHub.UnitTests\McpHub.UnitTests.csproj (in 1.04 sec).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.GitHub\McpHub.Modules.GitHub.csproj (in 74 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Host\McpHub.Host.csproj (in 346 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database\McpHub.Modules.Database.csproj (in 212 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Sql\McpHub.Modules.Sql.csproj (in 523 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Sql\McpHub.Modules.Database.Sql.csproj (in 138 ms).

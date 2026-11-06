@@ -1,0 +1,29 @@
+  Determining projects to restore...
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Mongo\McpHub.Modules.Mongo.csproj (in 599 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Postgres\McpHub.Modules.Postgres.csproj (in 599 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Core\McpHub.Core.csproj (in 10 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Sql\McpHub.Modules.Sql.csproj (in 598 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Infrastructure\McpHub.Infrastructure.csproj (in 599 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.GitHub\McpHub.Modules.GitHub.csproj (in 48 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Host\McpHub.Host.csproj (in 274 ms).
+  Restored D:\.net\ms\DotNet\MCP\McpHub\tests\McpHub.UnitTests\McpHub.UnitTests.csproj (in 262 ms).
+  5 of 13 projects are up-to-date for restore.
+  McpHub.Core -> D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Core\bin\Debug\net10.0\McpHub.Core.dll
+  McpHub.Infrastructure -> D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Infrastructure\bin\Debug\net10.0\McpHub.Infrastructure.dll
+  McpHub.Modules.Sql -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Sql\bin\Debug\net10.0\McpHub.Modules.Sql.dll
+  McpHub.Modules.Mongo -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Mongo\bin\Debug\net10.0\McpHub.Modules.Mongo.dll
+  McpHub.Modules.Postgres -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Postgres\bin\Debug\net10.0\McpHub.Modules.Postgres.dll
+  McpHub.Modules.GitHub -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.GitHub\bin\Debug\net10.0\McpHub.Modules.GitHub.dll
+  McpHub.Modules.Database.Common -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Common\bin\Debug\net10.0\McpHub.Modules.Database.Common.dll
+  McpHub.Modules.Database.Mongo -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Mongo\bin\Debug\net10.0\McpHub.Modules.Database.Mongo.dll
+  McpHub.Modules.Database.Postgres -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Postgres\bin\Debug\net10.0\McpHub.Modules.Database.Postgres.dll
+  McpHub.Modules.Database.Sql -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database.Sql\bin\Debug\net10.0\McpHub.Modules.Database.Sql.dll
+  McpHub.Modules.Database -> D:\.net\ms\DotNet\MCP\McpHub\src\Modules\McpHub.Modules.Database\bin\Debug\net10.0\McpHub.Modules.Database.dll
+  McpHub.Host -> D:\.net\ms\DotNet\MCP\McpHub\src\McpHub.Host\bin\Debug\net10.0\McpHub.Host.dll
+  McpHub.UnitTests -> D:\.net\ms\DotNet\MCP\McpHub\tests\McpHub.UnitTests\bin\Debug\net10.0\McpHub.UnitTests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:20.32
