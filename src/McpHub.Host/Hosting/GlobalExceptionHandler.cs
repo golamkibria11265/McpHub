@@ -21,8 +21,7 @@ internal static class GlobalExceptionHandler
                 return;
             }
 
-            logger.LogError(failure, "Unhandled exception for {Method} {Path} (trace {TraceId})",
-                context.Request.Method, context.Request.Path.Value, context.TraceIdentifier);
+            logger.LogError(failure, "Unhandled exception for {Method} {Path} (trace {TraceId})",context.Request.Method, context.Request.Path.Value, context.TraceIdentifier);
 
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsJsonAsync(
