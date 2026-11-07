@@ -18,6 +18,10 @@ public static class TelegramClientFactory
             "api_hash" => apiHash,
             "session_pathname" => options.SessionPath,
             "session_key" => string.IsNullOrWhiteSpace(sessionKey) ? null : sessionKey,
+            // The saved session file is the credential, so tell WTelegramClient to accept the account it belongs to.
+            // Without this, LoginUserIfNeeded() compares the session against an unset phone_number/user_id, assumes a
+            // different user, logs the session out and asks for a phone number the server cannot provide.
+            "user_id" => "-1",
             _ => interactive?.Invoke(what)
         };
 

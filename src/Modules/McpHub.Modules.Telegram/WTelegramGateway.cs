@@ -29,6 +29,7 @@ internal sealed partial class WTelegramGateway : ITelegramGateway, IDisposable
     private readonly ConcurrentDictionary<long, Peered> peers = new();
 
     private Client? client;
+    private User? self;
     private IReadOnlyList<ChatSummary>? dialogs;
     private DateTimeOffset dialogsLoadedAt;
 
@@ -62,7 +63,7 @@ internal sealed partial class WTelegramGateway : ITelegramGateway, IDisposable
         RunAsync(async () =>
         {
             var c = await GetClientAsync(cancellationToken);
-            var me = c.User;
+            var me = await GetSelfAsync(c);
             return new AccountInfo(me.id, NameOf(me), me.MainUsername);
         });
 
@@ -74,10 +75,10 @@ internal sealed partial class WTelegramGateway : ITelegramGateway, IDisposable
 
             if (key.Equals("me", StringComparison.OrdinalIgnoreCase) || key.Equals("self", StringComparison.OrdinalIgnoreCase))
             {
-                var me = c.User;
-                var self = new Peered(new ChatRef(me.id, "user", "Saved Messages", me.MainUsername), InputPeer.Self);
-                peers[me.id] = self;
-                return self.Chat;
+                var me = await GetSelfAsync(c);
+                var saved = new Peered(new ChatRef(me.id, "user", "Saved Messages", me.MainUsername), InputPeer.Self);
+                peers[me.id] = saved;
+                return saved.Chat;
             }
 
             if (long.TryParse(key, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var id))
@@ -229,9 +230,7 @@ internal sealed partial class WTelegramGateway : ITelegramGateway, IDisposable
                 return client;
             }
 
-            var apiHash = await credentials.GetAsync(TelegramModule.IntegrationName, cancellationToken);
-            var sessionKey = configuration[$"Modules:{TelegramModule.IntegrationName}:Credentials:SessionKey"];
-            var created = TelegramClientFactory.Create(options.Value, apiHash, sessionKey, interactive: null);
+            var created = await CreateClientAsync(cancellationToken);
             try
             {
                 await created.ConnectAsync();
@@ -241,7 +240,9 @@ internal sealed partial class WTelegramGateway : ITelegramGateway, IDisposable
                         "The Telegram session is not signed in. Run the McpHub.Telegram.Login tool on the server.");
                 }
 
-                await created.LoginUserIfNeeded();
+                // Deliberately no LoginUserIfNeeded(): with a valid session UserId is set but User stays null, and that call
+                // would then ask for a phone number the server cannot give. A revoked session shows up as a 401 on the first
+                // request instead, which is translated into a safe "sign in again" message.
             }
             catch
             {
@@ -256,6 +257,27 @@ internal sealed partial class WTelegramGateway : ITelegramGateway, IDisposable
         {
             connectLock.Release();
         }
+    }
+
+    private async Task<Client> CreateClientAsync(CancellationToken cancellationToken)
+    {
+        var apiHash = await credentials.GetAsync(TelegramModule.IntegrationName, cancellationToken);
+        var sessionKey = configuration[$"Modules:{TelegramModule.IntegrationName}:Credentials:SessionKey"];
+        return TelegramClientFactory.Create(options.Value, apiHash, sessionKey, interactive: null);
+    }
+
+    /// <summary>The signed-in account. Fetched once from Telegram because <c>Client.User</c> is empty after resuming a saved session.</summary>
+    private async Task<User> GetSelfAsync(Client c)
+    {
+        if (self is not null)
+        {
+            return self;
+        }
+
+        var users = await c.Users_GetUsers(new InputUserBase[] { new InputUserSelf() });
+        self = users.OfType<User>().FirstOrDefault()
+               ?? throw Fail(IntegrationErrorKind.Unauthorized, "The Telegram session is no longer valid. Sign in again with the login tool.");
+        return self;
     }
 
     private async Task<IReadOnlyList<ChatSummary>> RefreshDialogsAsync(Client c, bool force)

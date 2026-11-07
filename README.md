@@ -125,6 +125,7 @@ Safety built in:
 - **Card numbers:** anything that looks like a payment card number (13-19 digits passing the Luhn check) is masked in every message returned, and text containing one is refused when sending.
 - **Prompt injection:** incoming messages are untrusted. Tool descriptions tell the model to treat them as data, and sending is off by default, rate limited (`MaxWritesPerMinute`) and audited like every other tool.
 - **No phone numbers** are returned and **no media is downloaded** (only a description such as `document: report.pdf`), so nothing from a chat lands on the server's disk. Files are sent from base64 content, never from a server path.
+- **Logout:** stopping the server does not end the Telegram session; it stays valid until you run `dotnet run --project tools/McpHub.Telegram.Login -- logout src/McpHub.Host`, which logs out on Telegram's side and deletes the session file.
 - **The session file is a full login to your account.** It is encrypted with `SessionKey` (the server refuses to start without one unless you turn `RequireSessionEncryption` off), kept out of git, and should be readable only by the service user (`chmod 600`). If it leaks, end the session in Telegram under Settings > Devices.
 
 Compliance notes (SSLWIRELESS / Bangladesh Bank): private chats hold other people's personal data and may mention customers, transactions or credentials,

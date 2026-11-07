@@ -1,5 +1,6 @@
 using McpHub.Core.Tools;
 using McpHub.Host;
+using McpHub.Host.Hosting;
 using McpHub.Host.Mcp;
 using McpHub.Host.Modules;
 using McpHub.Host.Security;
@@ -7,6 +8,8 @@ using McpHub.Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
 
 // Composition root only: no business logic lives here.
+
+// Before anything can fail: an unhandled exception ends the process instead of leaving it running.
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +38,9 @@ var mcp = builder.Services
 mcp.AddIntegrationModules(builder.Services, builder.Configuration);
 
 var app = builder.Build();
+
+// First, so it wraps everything below: unhandled exceptions are logged and answered with a generic 500.
+app.UseMcpHubExceptionHandler();
 
 app.UseForwardedHeaders();
 app.UseAuthentication();
@@ -67,5 +73,4 @@ else
 {
     app.Logger.LogInformation("Enabled modules: {Modules}", string.Join(", ", loaded.Names));
 }
-
 app.Run();
