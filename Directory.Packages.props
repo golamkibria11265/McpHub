@@ -23,10 +23,6 @@
     <PackageVersion Include="Npgsql" Version="9.0.3" />
     <PackageVersion Include="MongoDB.Driver" Version="3.13.0" />
 
-    <!-- Telegram module (user account over MTProto). Floats within 4.x until the first restore; then replace "4.*" with the exact
-         version from packages.lock.json and commit. Check it for advisories like the other drivers. -->
-    <PackageVersion Include="WTelegramClient" Version="4.*" />
-
     <!-- Security pins for transitive dependencies (known vulnerabilities in the versions the drivers resolve by default).
          Pkcs: pulled in by SqlClient, fixed in 9.0.21. Remove when SqlClient depends on a fixed version itself. -->
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.21" />

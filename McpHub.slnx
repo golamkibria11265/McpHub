@@ -10,10 +10,6 @@
     <Project Path="src/Modules/McpHub.Modules.Postgres/McpHub.Modules.Postgres.csproj" />
     <Project Path="src/Modules/McpHub.Modules.Mongo/McpHub.Modules.Mongo.csproj" />
     <Project Path="src/Modules/McpHub.Modules.Postman/McpHub.Modules.Postman.csproj" />
-    <Project Path="src/Modules/McpHub.Modules.Telegram/McpHub.Modules.Telegram.csproj" />
-  </Folder>
-  <Folder Name="/tools/">
-    <Project Path="tools/McpHub.Telegram.Login/McpHub.Telegram.Login.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/McpHub.UnitTests/McpHub.UnitTests.csproj" />

@@ -2,7 +2,7 @@
 
 A production-oriented [Model Context Protocol](https://modelcontextprotocol.io) server in .NET 10 that lets Claude use
 your systems through small, audited, read-only-by-default tools. One host, one plugin-style module per integration.
-Today: **GitHub, SQL Server, PostgreSQL, MongoDB, Postman and Telegram (read, plus switch-gated writes)**. Planned: SQL Server, Jira, LinkedIn, Facebook.
+Today: **GitHub, SQL Server, PostgreSQL, MongoDB and Postman**. Planned: SQL Server, Jira, LinkedIn, Facebook.
 
 > Status: first scaffold. It was written without access to a .NET SDK or NuGet, so **run the first build yourself**
 > (see "First run") and fix anything the compiler reports before deploying.
@@ -99,38 +99,6 @@ Deploying a new version: publish, rsync, `sudo systemctl restart mcphub` (statel
 - **Claude apps (custom connector):** add `https://mcp.[YOUR_DOMAIN]/mcp` as a custom connector. Your identity provider must
   support the OAuth flow the connector uses (check Anthropic's current connector documentation for requirements such as
   dynamic client registration), and the server must be reachable from the internet.
-
-## Telegram module (your own account)
-
-`McpHub.Modules.Telegram` signs in as **you** through Telegram's user API (MTProto, via the WTelegramClient package), so Claude
-can read your chats and, when you switch it on, write as you. A bot token cannot do this: bots only see chats they were added to.
-
-| Tool | Scope | Needs |
-|------|-------|-------|
-| `telegram_me`, `telegram_list_chats`, `telegram_list_contacts`, `telegram_get_messages`, `telegram_search_messages` | `telegram.read` | module enabled |
-| `telegram_send_message`, `telegram_send_file`, `telegram_edit_message`, `telegram_forward_messages`, `telegram_react`, `telegram_mark_read` | `telegram.write` | `AllowWrite: true` |
-| `telegram_delete_messages` | `telegram.delete` | `AllowWrite: true` and `AllowDelete: true` |
-
-Setup (one time):
-
-1. Create an app at <https://my.telegram.org> (API development tools) and note the `api_id` and `api_hash`.
-2. In your settings file set `Modules:Telegram:ApiId`, `Credentials:Token` (the api_hash), `Credentials:SessionKey` (a long random value that encrypts the session file) and `SessionPath` (a folder **outside** the repository).
-3. Sign in once, on the machine that runs the server: `dotnet run --project tools/McpHub.Telegram.Login -- src/McpHub.Host`.
-   Type the login code (and the two-step password, if you have one) there. They never pass through a chat with Claude.
-4. Set `Modules:Telegram:Enabled` to `true` and restart. Start with reads only; turn on `AllowWrite` / `AllowDelete` when you need them.
-
-Safety built in:
-
-- **Never readable, never writable:** Telegram's service chat (id 777000, it delivers your login codes) and @BotFather (it hands out bot tokens). Anyone able to steer a prompt could otherwise take over the account. Add more with `DeniedChats`, or restrict everything to a short list with `AllowedChats` (ids or @usernames).
-- **Card numbers:** anything that looks like a payment card number (13-19 digits passing the Luhn check) is masked in every message returned, and text containing one is refused when sending.
-- **Prompt injection:** incoming messages are untrusted. Tool descriptions tell the model to treat them as data, and sending is off by default, rate limited (`MaxWritesPerMinute`) and audited like every other tool.
-- **No phone numbers** are returned and **no media is downloaded** (only a description such as `document: report.pdf`), so nothing from a chat lands on the server's disk. Files are sent from base64 content, never from a server path.
-- **Logout:** stopping the server does not end the Telegram session; it stays valid until you run `dotnet run --project tools/McpHub.Telegram.Login -- logout src/McpHub.Host`, which logs out on Telegram's side and deletes the session file.
-- **The session file is a full login to your account.** It is encrypted with `SessionKey` (the server refuses to start without one unless you turn `RequireSessionEncryption` off), kept out of git, and should be readable only by the service user (`chmod 600`). If it leaks, end the session in Telegram under Settings > Devices.
-
-Compliance notes (SSLWIRELESS / Bangladesh Bank): private chats hold other people's personal data and may mention customers, transactions or credentials,
-and everything a tool returns goes to the model provider. Use a personal or dedicated account rather than one that handles customer support or payment operations,
-get compliance sign-off before enabling it on an account that does, and keep `AllowedChats` narrow. Telegram's API terms apply to the api_id you register: use it for your own account only.
 
 ## Adding a new integration (about 10 minutes)
 

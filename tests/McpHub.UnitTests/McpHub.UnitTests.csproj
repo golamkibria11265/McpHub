@@ -20,7 +20,6 @@
     <ProjectReference Include="..\..\src\Modules\McpHub.Modules.Postgres\McpHub.Modules.Postgres.csproj" />
     <ProjectReference Include="..\..\src\Modules\McpHub.Modules.Mongo\McpHub.Modules.Mongo.csproj" />
     <ProjectReference Include="..\..\src\Modules\McpHub.Modules.Postman\McpHub.Modules.Postman.csproj" />
-    <ProjectReference Include="..\..\src\Modules\McpHub.Modules.Telegram\McpHub.Modules.Telegram.csproj" />
   </ItemGroup>
 
   <ItemGroup>

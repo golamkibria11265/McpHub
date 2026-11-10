@@ -591,7 +591,6 @@
           "McpHub.Modules.Postgres": "[1.0.0, )",
           "McpHub.Modules.Postman": "[1.0.0, )",
           "McpHub.Modules.Sql": "[1.0.0, )",
-          "McpHub.Modules.Telegram": "[1.0.0, )",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[10.0.0, )",
           "ModelContextProtocol": "[*-*, )",
           "ModelContextProtocol.AspNetCore": "[*-*, )"
@@ -642,14 +641,6 @@
           "McpHub.Core": "[1.0.0, )",
           "Microsoft.Data.SqlClient": "[6.0.2, )",
           "ModelContextProtocol": "[*-*, )"
-        }
-      },
-      "mcphub.modules.telegram": {
-        "type": "Project",
-        "dependencies": {
-          "McpHub.Core": "[1.0.0, )",
-          "ModelContextProtocol": "[*-*, )",
-          "WTelegramClient": "[4.*, )"
         }
       },
       "Microsoft.AspNetCore.Authentication.JwtBearer": {
@@ -737,12 +728,6 @@
         "requested": "[9.0.21, )",
         "resolved": "9.0.21",
         "contentHash": "KD+oHoYIxwNCajjVe58WVwq9cRpum+Pg3tRveDRtkcaw6w3oc7sNBoMRtb5P5OehI3bgv1ucMpgjf8lpj5J96A=="
-      },
-      "WTelegramClient": {
-        "type": "CentralTransitive",
-        "requested": "[4.*, )",
-        "resolved": "4.4.10",
-        "contentHash": "1L/3ntiWiKnD743XMjthJIdL01WpHTE/WlRKqpF3dAorGgsabU+EZpq2j9q7H/Yb0PfXUoMaWxkrYYSg0brm0Q=="
       }
     }
   }
