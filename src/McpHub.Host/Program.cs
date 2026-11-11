@@ -58,12 +58,15 @@ app.MapMcp("/mcp")
 var loaded = app.Services.GetRequiredService<LoadedModules>();
 
 // Landing page for local development only (Production keeps "/" unmapped, so nothing extra is exposed).
-if (app.Environment.IsDevelopment())
-{
-    app.MapGet("/", () => Results.Content(
-        LandingPage.Render(app.Environment.EnvironmentName, loaded.Names), "text/html"))
-        .AllowAnonymous();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.MapGet("/", () => Results.Content(
+//        LandingPage.Render(app.Environment.EnvironmentName, loaded.Names), "text/html"))
+//        .AllowAnonymous();
+//}
+app.MapGet("/", () => Results.Content(
+    LandingPage.Render(app.Environment.EnvironmentName, loaded.Names), "text/html"))
+    .AllowAnonymous();
 
 if (loaded.Names.Count == 0)
 {
