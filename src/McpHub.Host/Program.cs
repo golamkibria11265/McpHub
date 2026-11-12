@@ -58,14 +58,14 @@ app.MapMcp("/mcp")
 
 var loaded = app.Services.GetRequiredService<LoadedModules>();
 
-// Landing page in every environment. Production gets a minimal page (no environment or module names, no health links).
+// Landing page in every environment, same full view everywhere (environment, enabled modules, health links).
 // PathBase is set automatically by IIS (e.g. /mcp-hub) and is empty behind Nginx, so the page works on both.
 app.MapGet("/", (HttpContext context) => Results.Content(
         LandingPage.Render(
             app.Environment.EnvironmentName,
             loaded.Names,
             context.Request.PathBase.Value ?? string.Empty,
-            app.Environment.IsDevelopment()),
+            detailed: true),
         "text/html"))
     .AllowAnonymous();
 

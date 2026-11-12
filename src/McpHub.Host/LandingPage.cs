@@ -4,8 +4,8 @@ namespace McpHub.Host;
 
 /// <summary>
 /// Landing page served at "/" in every environment. Self-contained: no external assets. Links honour the request's
-/// PathBase, so it works under IIS (e.g. /mcp-hub) and behind Nginx (root). Production gets a minimal page that does
-/// not reveal the environment name, module names or health endpoints; Development shows the full diagnostic view.
+/// PathBase, so it works under IIS (e.g. /mcp-hub) and behind Nginx (root). Program.cs currently passes detailed: true in
+/// every environment; pass false to get the minimal view that hides the environment name, module names and health endpoints.
 /// </summary>
 internal static class LandingPage
 {
@@ -40,7 +40,7 @@ internal static class LandingPage
                 """ : string.Empty;
 
         var footer = detailed
-            ? "McpHub &middot; Development view"
+            ? "McpHub &middot; Model Context Protocol gateway"
             : "McpHub &middot; Model Context Protocol gateway";
 
         var statusScript = detailed ? $$"""
