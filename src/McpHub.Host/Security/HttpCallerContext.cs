@@ -13,7 +13,7 @@ internal sealed class HttpCallerContext(IHttpContextAccessor accessor, IOptions<
 
     public bool HasScope(string scope)
     {
-        // Auth can only be disabled in Development (enforced at startup), where every scope is granted.
+        // With Auth:Enabled=false (any environment) the caller is trusted and every scope is granted.
         if (!auth.Value.Enabled)
         {
             return true;

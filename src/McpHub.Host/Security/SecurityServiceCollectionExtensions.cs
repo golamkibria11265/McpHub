@@ -23,11 +23,11 @@ internal static class SecurityServiceCollectionExtensions
 
         if (!auth.Enabled)
         {
-            // Fail closed: a misconfigured production server must never start without authentication.
-            if (!environment.IsDevelopment())
-            {
-                throw new InvalidOperationException("Auth:Enabled=false is only allowed in the Development environment.");
-            }
+            // Auth:Enabled=false behaves the same in every environment (Development, Production, IIS, Nginx).
+            // Every request is then treated as one trusted local caller with all scopes, so the endpoint must only be
+            // reachable by people you already trust (localhost, IP restriction, private segment). Module switches such as
+            // AllowWrite and the allow-lists still apply. A warning is logged on every start as a reminder.
+            services.AddSingleton<IHostedService, AuthDisabledWarning>();
 
             services
                 .AddAuthentication(DevelopmentAuthHandler.SchemeName)
@@ -83,6 +83,19 @@ internal static class SecurityServiceCollectionExtensions
             });
 
         return services;
+    }
+
+    private sealed class AuthDisabledWarning(ILogger<AuthDisabledWarning> logger, IHostEnvironment environment) : IHostedService
+    {
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            logger.LogWarning(
+                "Authentication is DISABLED (Auth:Enabled=false, environment {Environment}). Every caller is trusted with all scopes. Do not expose this endpoint beyond trusted users.",
+                environment.EnvironmentName);
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
     private static bool HasPlaceholder(string? value) =>
