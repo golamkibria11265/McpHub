@@ -21,6 +21,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddJsonConsole();
 
 // Behind Nginx on the same machine: trust X-Forwarded-* from loopback only (the framework default).
+// Under IIS (in-process) the port comes from the IIS site binding and "Urls" is ignored; the same build runs on both.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto);
 
@@ -57,15 +58,15 @@ app.MapMcp("/mcp")
 
 var loaded = app.Services.GetRequiredService<LoadedModules>();
 
-// Landing page for local development only (Production keeps "/" unmapped, so nothing extra is exposed).
-//if (app.Environment.IsDevelopment())
-//{
-//    app.MapGet("/", () => Results.Content(
-//        LandingPage.Render(app.Environment.EnvironmentName, loaded.Names), "text/html"))
-//        .AllowAnonymous();
-//}
-app.MapGet("/", () => Results.Content(
-    LandingPage.Render(app.Environment.EnvironmentName, loaded.Names), "text/html"))
+// Landing page in every environment. Production gets a minimal page (no environment or module names, no health links).
+// PathBase is set automatically by IIS (e.g. /mcp-hub) and is empty behind Nginx, so the page works on both.
+app.MapGet("/", (HttpContext context) => Results.Content(
+        LandingPage.Render(
+            app.Environment.EnvironmentName,
+            loaded.Names,
+            context.Request.PathBase.Value ?? string.Empty,
+            app.Environment.IsDevelopment()),
+        "text/html"))
     .AllowAnonymous();
 
 if (loaded.Names.Count == 0)

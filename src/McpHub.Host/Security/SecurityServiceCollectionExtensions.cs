@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using McpHub.Core.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,6 +41,16 @@ internal static class SecurityServiceCollectionExtensions
             throw new InvalidOperationException("Auth:Authority and Auth:Audience are required when authentication is enabled.");
         }
 
+        // Fail at startup with a readable message instead of a generic 500 on every request (typical on a first
+        // IIS or Linux deploy where appsettings.Production.json still holds the template placeholders).
+        if (!environment.IsDevelopment()
+            && (HasPlaceholder(auth.Authority) || HasPlaceholder(auth.Audience) || HasPlaceholder(auth.PublicBaseUrl)))
+        {
+            throw new InvalidOperationException(
+                "Auth:Authority, Auth:Audience and Auth:PublicBaseUrl still contain template placeholders such as [YOUR_DOMAIN]. " +
+                "Set real values in appsettings.Production.json on the server.");
+        }
+
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -73,4 +84,7 @@ internal static class SecurityServiceCollectionExtensions
 
         return services;
     }
+
+    private static bool HasPlaceholder(string? value) =>
+        !string.IsNullOrEmpty(value) && Regex.IsMatch(value, @"\[[A-Z][A-Z0-9_]*\]");
 }

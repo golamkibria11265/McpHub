@@ -93,6 +93,20 @@ certificate for your domain. Health checks (local only): `curl http://127.0.0.1:
 
 Deploying a new version: publish, rsync, `sudo systemctl restart mcphub` (stateless server, so restarts are safe).
 
+## Deploy on Windows (IIS)
+
+The same build runs under IIS (in-process). Install the **.NET 10 Hosting Bundle**, then:
+
+```powershell
+dotnet publish src/McpHub.Host -c Release -o publish      # generates web.config
+```
+
+Create an IIS site or application pointing at the publish folder (app pool: *No Managed Code*). IIS owns the port, so `Urls` is
+ignored; `ASPNETCORE_ENVIRONMENT` defaults to Production. Fill in `appsettings.Production.json` on the server: the app refuses to
+start while `Auth:*` still holds `[PLACEHOLDER]` values, and `AllowedHosts` must match the site's host name. If hosted under a
+sub-path such as `/mcp-hub`, set `Auth:PublicBaseUrl` to include it. Logs go to stdout: enable `stdoutLogEnabled` in `web.config`
+temporarily to read startup errors. The landing page (`/`) shows in every environment; Production shows a minimal version.
+
 ## Connect Claude
 
 - **Claude Code:** `claude mcp add --transport http mcphub https://mcp.[YOUR_DOMAIN]/mcp`

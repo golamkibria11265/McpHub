@@ -2,17 +2,57 @@ using System.Net;
 
 namespace McpHub.Host;
 
-/// <summary>Development-only landing page served at "/". Self-contained: no external assets.</summary>
+/// <summary>
+/// Landing page served at "/" in every environment. Self-contained: no external assets. Links honour the request's
+/// PathBase, so it works under IIS (e.g. /mcp-hub) and behind Nginx (root). Production gets a minimal page that does
+/// not reveal the environment name, module names or health endpoints; Development shows the full diagnostic view.
+/// </summary>
 internal static class LandingPage
 {
-    public static string Render(string environment, IEnumerable<string> modules)
+    public static string Render(string environment, IEnumerable<string> modules, string pathBase, bool detailed)
     {
         var list = modules.ToList();
+        var basePath = (pathBase ?? string.Empty).TrimEnd('/');
+        var basePathHtml = WebUtility.HtmlEncode(basePath);
+        var basePathJs = System.Text.Json.JsonSerializer.Serialize(basePath).Replace("<", "\\u003c");
         var cards = list.Count == 0
             ? """<p class="empty">No modules enabled. Set <code>Modules:&lt;Name&gt;:Enabled=true</code> in appsettings.</p>"""
             : string.Concat(list.Select(m => $"""
                 <div class="module"><span class="check">&#10003;</span><div><strong>{WebUtility.HtmlEncode(m)}</strong><small>Module active</small></div></div>
                 """));
+
+        var stats = detailed ? $$"""
+                <section class="stats">
+                  <div class="stat"><div class="k">Server status</div><div class="v"><span id="dot" class="dot"></span><span id="status">Checking&hellip;</span></div></div>
+                  <div class="stat"><div class="k">Environment</div><div class="v">{{WebUtility.HtmlEncode(environment)}}</div></div>
+                  <div class="stat"><div class="k">Modules enabled</div><div class="v">{{list.Count}}</div></div>
+                </section>
+                """ : string.Empty;
+
+        var healthRows = detailed ? $$"""
+                  <a class="row" href="{{basePathHtml}}/health/live"><span class="tag get">GET</span><code>/health/live</code><span class="d">Liveness: is the process up?</span><span class="go">Open &rarr;</span></a>
+                  <a class="row" href="{{basePathHtml}}/health/ready"><span class="tag get">GET</span><code>/health/ready</code><span class="d">Readiness: are dependencies healthy?</span><span class="go">Open &rarr;</span></a>
+                """ : string.Empty;
+
+        var modulesSection = detailed ? $$"""
+                <h2>Modules</h2>
+                <div class="modules">{{cards}}</div>
+                """ : string.Empty;
+
+        var footer = detailed
+            ? "McpHub &middot; Development view"
+            : "McpHub &middot; Model Context Protocol gateway";
+
+        var statusScript = detailed ? $$"""
+                fetch(base + "/health/ready").then(r => r.text()).then(t => {
+                  const ok = t.trim() === "Healthy";
+                  document.getElementById("dot").className = "dot " + (ok ? "ok" : "bad");
+                  document.getElementById("status").textContent = ok ? "Healthy" : t.trim() || "Unhealthy";
+                }).catch(() => {
+                  document.getElementById("dot").className = "dot bad";
+                  document.getElementById("status").textContent = "Unreachable";
+                });
+                """ : string.Empty;
 
         return $$"""
             <!doctype html>
@@ -123,46 +163,34 @@ internal static class LandingPage
                   <p class="sub">One secure gateway that exposes your integrations to AI assistants through the Model Context Protocol.</p>
                   <div class="connect">
                     <span class="lbl">MCP URL</span>
-                    <code id="url">/mcp</code>
+                    <code id="url">{{basePathHtml}}/mcp</code>
                     <button id="copy" type="button">Copy</button>
                   </div>
                 </section>
 
-                <section class="stats">
-                  <div class="stat"><div class="k">Server status</div><div class="v"><span id="dot" class="dot"></span><span id="status">Checking&hellip;</span></div></div>
-                  <div class="stat"><div class="k">Environment</div><div class="v">{{WebUtility.HtmlEncode(environment)}}</div></div>
-                  <div class="stat"><div class="k">Modules enabled</div><div class="v">{{list.Count}}</div></div>
-                </section>
+                {{stats}}
 
                 <h2>Endpoints</h2>
                 <div class="endpoints">
-                  <div class="row"><span class="tag mcp">MCP</span><code>/mcp</code><span class="d">Streamable HTTP endpoint. Connect with an MCP client such as MCP Inspector.</span></div>
-                  <a class="row" href="/health/live"><span class="tag get">GET</span><code>/health/live</code><span class="d">Liveness: is the process up?</span><span class="go">Open &rarr;</span></a>
-                  <a class="row" href="/health/ready"><span class="tag get">GET</span><code>/health/ready</code><span class="d">Readiness: are dependencies healthy?</span><span class="go">Open &rarr;</span></a>
+                  <div class="row"><span class="tag mcp">MCP</span><code>{{basePathHtml}}/mcp</code><span class="d">Streamable HTTP endpoint. Connect with an MCP client such as MCP Inspector.</span></div>
+                  {{healthRows}}
                 </div>
 
-                <h2>Modules</h2>
-                <div class="modules">{{cards}}</div>
+                {{modulesSection}}
 
-                <footer><span>McpHub &middot; Development landing page</span><span>Not served in Production</span></footer>
+                <footer><span>{{footer}}</span></footer>
               </main>
 
               <script>
-                const url = location.origin + "/mcp";
+                const base = {{basePathJs}};
+                const url = location.origin + base + "/mcp";
                 document.getElementById("url").textContent = url;
                 document.getElementById("copy").addEventListener("click", async (e) => {
                   try { await navigator.clipboard.writeText(url); e.target.textContent = "Copied!"; }
                   catch { e.target.textContent = "Copy failed"; }
                   setTimeout(() => e.target.textContent = "Copy", 1500);
                 });
-                fetch("/health/ready").then(r => r.text()).then(t => {
-                  const ok = t.trim() === "Healthy";
-                  document.getElementById("dot").className = "dot " + (ok ? "ok" : "bad");
-                  document.getElementById("status").textContent = ok ? "Healthy" : t.trim() || "Unhealthy";
-                }).catch(() => {
-                  document.getElementById("dot").className = "dot bad";
-                  document.getElementById("status").textContent = "Unreachable";
-                });
+                {{statusScript}}
               </script>
             </body>
             </html>
